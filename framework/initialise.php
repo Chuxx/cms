@@ -5,3 +5,5 @@
  */
 
 error_reporting(E_ALL);
+
+require_once 'utilities/request.class.php';
