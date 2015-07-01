@@ -18,8 +18,10 @@ else
 
 require_once 'utilities/request.class.php';
 require_once 'utilities/page.class.php';
+require_once 'utilities/connection.class.php';
 require_once 'utilities/module.class.php';
 require_once 'handlers/modules.class.php';
 
 $page = new page();
-$modules = new modules($page);
+$connection = new connection();
+$modules = new modules($connection, $page);

@@ -1,0 +1,6 @@
+TRIGGERS
+
+public_request						Triggered as soon as a public request is made
+unhandled_public_request			Triggered when a public request has no controller
+http_status_404						Triggered when a public request is not handled
+http_status_301						Triggered when the [redirects] module fires a 301

@@ -8,9 +8,9 @@ class modules
 	
 	
 	
-	public function __construct($page)
+	public function __construct($connection, $page)
 	{
-		$this->prepare_modules($page);
+		$this->prepare_modules($connection, $page);
 	}
 	
 	
@@ -29,7 +29,7 @@ class modules
 	
 	
 	
-	public function prepare_modules($page)
+	public function prepare_modules($connection, $page)
 	{
 		foreach(scandir(dirname(__FILE__) . '/../../modules') as $id => $module)
 		{
@@ -41,7 +41,7 @@ class modules
 		{
 			require_once dirname(__FILE__) . '/../../modules/' . $module_name . '/' . $module_name . '.module.php';
 			$class = $module_name . '_module';
-			$this->loaded_modules[$module_name] = new $class(null, $page);
+			$this->loaded_modules[$module_name] = new $class($this, $connection, $page);
 		}
 	}
 	

@@ -13,7 +13,7 @@ abstract class request
 		return isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
 	}
 	
-	public static function url($part, $default_value = null)
+	public static function url($part, $default_value = '')
 	{
 		if(is_null(self::$url))
 		{
