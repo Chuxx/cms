@@ -9,7 +9,7 @@ class redirects_module extends module
 	 */
 	public function public_request()
 	{
-		if(is_null($this->connection) || !($result = $this->connection->query("SELECT * FROM `redirects`"))) return false;
+		if(is_null($this->connection) || !($query = $this->connection->query("SELECT * FROM `redirects`"))) return false;
 		$redirects = $query->fetchAll(PDO::FETCH_ASSOC);
 		foreach($redirects as $r)
 		{
