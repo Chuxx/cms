@@ -6,14 +6,30 @@
 
 abstract class request
 {
+	private static $url = null;
+	
 	public static function ip()
 	{
 		return isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
 	}
 	
-	public static function time()
+	public static function url($part, $default_value = null)
 	{
-		return self::$time;
+		if(is_null(self::$url))
+		{
+			$url = self::get('url');
+			if($url == 'index.php') $url = null;
+			self::$url = explode('/', rtrim($url, '/'));
+			if(!isset(self::$url[0]) || empty(self::$url[0])) self::$url = null;
+		}
+		
+		if(is_int($part) && !is_null(self::$url))
+		{
+			$part--;
+			if($part == -1) return implode('/', self::$url);
+			if(isset(self::$url[$part])) return self::$url[$part];
+		}
+		return $default_value;
 	}
 	
 	public static function get($key, $default_value = null)
