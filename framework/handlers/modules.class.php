@@ -4,12 +4,13 @@ class modules
 {
 	
 	private $modules = array();
+	private $loaded_modules = array();
 	
 	
 	
-	public function __construct()
+	public function __construct($page)
 	{
-		$this->prepare_modules();
+		$this->prepare_modules($page);
 	}
 	
 	
@@ -28,12 +29,19 @@ class modules
 	
 	
 	
-	public function prepare_modules()
+	public function prepare_modules($page)
 	{
 		foreach(scandir(dirname(__FILE__) . '/../../modules') as $id => $module)
 		{
 			if($module == '.' || $module == '..') continue;
 			$this->modules[$module] = $this->load_module_config($module);
+		}
+		
+		foreach($this->get_modules_enabled() as $module_name)
+		{
+			require_once dirname(__FILE__) . '/../../modules/' . $module_name . '/' . $module_name . '.module.php';
+			$class = $module_name . '_module';
+			$this->loaded_modules[$module_name] = new $class(null, $page);
 		}
 	}
 	
@@ -85,5 +93,47 @@ class modules
 		$enabled = array();
 		foreach($this->modules as $name => $config) if($config['enabled']) $enabled[] = $name;
 		return $enabled;
+	}
+	
+	
+	public function trigger()
+	{
+		$args = func_get_args();
+		if(count($args) == 0) return false;
+		$event = array_shift($args);
+		
+		foreach($this->loaded_modules as $name => $module)
+		{
+			if(method_exists($module, $event)) return call_user_func_array(array($module, $event), $args);
+		}
+		return false;
+	}
+	
+	
+	public function run_public_controller()
+	{
+		foreach($this->get_modules_enabled() as $module_name)
+		{
+			if(file_exists(dirname(__FILE__) . '/../../modules/' . $module_name . '/public/controllers/' . request::url(1) . '.php'))
+			{
+				require_once dirname(__FILE__) . '/../../modules/' . $module_name . '/public/controllers/' . request::url(1) . '.php';
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	
+	public function run_private_controller()
+	{
+		foreach($this->get_modules_enabled() as $module_name)
+		{
+			if(file_exists(dirname(__FILE__) . '/../../modules/' . $module_name . '/private/controllers/' . request::url(1) . '.php'))
+			{
+				require_once dirname(__FILE__) . '/../../modules/' . $module_name . '/private/controllers/' . request::url(1) . '.php';
+				return true;
+			}
+		}
+		return false;
 	}
 }

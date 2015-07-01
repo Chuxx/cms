@@ -2,6 +2,8 @@
 
 abstract class settings
 {
+	const DEBUGGING = true;
+	
 	const DB_USER = 'root';
 	const DB_PASS = '';
 	const DB_HOST = 'localhost';
