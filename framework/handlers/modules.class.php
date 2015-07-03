@@ -116,6 +116,7 @@ class modules
 		{
 			if(file_exists(dirname(__FILE__) . '/../../modules/' . $module_name . '/public/controllers/' . request::url(1) . '.php'))
 			{
+				$this->modules->trigger('handled_public_request');
 				require_once dirname(__FILE__) . '/../../modules/' . $module_name . '/public/controllers/' . request::url(1) . '.php';
 				return true;
 			}
@@ -128,9 +129,10 @@ class modules
 	{
 		foreach($this->get_modules_enabled() as $module_name)
 		{
-			if(file_exists(dirname(__FILE__) . '/../../modules/' . $module_name . '/private/controllers/' . request::url(1) . '.php'))
+			if(file_exists(dirname(__FILE__) . '/../../modules/' . $module_name . '/private/controllers/' . request::url(2) . '.php'))
 			{
-				require_once dirname(__FILE__) . '/../../modules/' . $module_name . '/private/controllers/' . request::url(1) . '.php';
+				$this->modules->trigger('handled_private_request');
+				require_once dirname(__FILE__) . '/../../modules/' . $module_name . '/private/controllers/' . request::url(2) . '.php';
 				return true;
 			}
 		}
